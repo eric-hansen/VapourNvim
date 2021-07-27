@@ -1,5 +1,8 @@
 local mappings = {
-  freedom = "dev-freedom"
+  freedom = {
+    profile = "dev-freedom",
+    remote_dir_root = "/var/www/html/freedom",
+  }
 }
 
 local M = {
@@ -37,10 +40,10 @@ M.sync = function()
     absolute = vim.fn.expand('%:p'),
   }
 
-  for key, profile in pairs(mappings) do
+  for key, config in pairs(mappings) do
     if string.match(paths.absolute, '.*' .. key .. '.*') then
-      print('Attemping to sync ' .. paths.relative .. ' to ' .. profile)
-      M.exec.run('scp', {paths.absolute, profile .. ':/var/www/html/' .. key .. '/' .. paths.relative})
+      print('Attemping to sync ' .. paths.relative .. ' to ' .. config.profile)
+      M.exec.run('scp', {paths.absolute, config.profile .. ':' .. config.remote_dir_root .. '/' .. paths.relative})
       return true
     end
   end
